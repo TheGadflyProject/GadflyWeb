@@ -43,10 +43,14 @@
 
             render: function() {
                 return (<div>
-                            <ArticleInput handleSubmit={this.updateArticleURL} />
+                            <div className="section">
+                                <ArticleInput handleSubmit={this.updateArticleURL} />
+                            </div>
                             <div className="divider"></div>
-                            <div className="card-panel blue lighten-2">Displaying Questions for <a href={this.state.articleURL}>article</a>.</div>
-                            <Questions articleURL={this.state.articleURL}/>
+                            <div className="section">
+                                <div className="card-panel blue lighten-2">Displaying Questions for <a href={this.state.articleURL}>article</a>.</div>
+                                <Questions articleURL={this.state.articleURL}/>
+                            </div>
                         </div>);
             }
         });
@@ -74,7 +78,8 @@
                     <form onSubmit={this.handleSubmit}>
                         <input type="text" id="article_url" onChange={this.handleInputChange} value={this.state.inputURL}></input>
                         <label htmlFor="article_url">Article URL</label>
-                        <input type="submit" value="Submit" />
+                        <br />
+                        <input type="submit" value="Submit" className="btn" />  
                     </form>);
             }
         });
