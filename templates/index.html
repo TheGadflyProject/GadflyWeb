@@ -12,43 +12,102 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.13.2/JSXTransformer.js"></script>
 </head>
 <body>
+    <nav>
+        <div class="nav-wrapper">
+        <a href="#" class="brand-logo">The Gadfly Project</a>
+        <ul id="nav-mobile" class="right hide-on-med-and-down">
+            <li><a href="http://ischool.berkeley.edu">About</a></li>
+        </ul>
+        </div>
+    </nav>
     <div class="container">
         <div class="row">
-            <div class="col s12 m3 l3">
-            </div>
-            <div class="col s12 m9 l9">
-                <div id="mount-point">
-                </div>
+            <div id="mount-point" class="col s12 m12 l12">
             </div>
         </div>
     </div>
 
     <script type="text/jsx">
         /*** @jsx React.DOM */
+        var Page = React.createClass({
+
+            getInitialState: function() {
+                return {
+                    articleURL: "",
+                };
+            },
+            
+            updateArticleURL: function(newURL) {
+                this.setState({articleURL: newURL});
+            },
+
+            render: function() {
+                return (<div>
+                            <ArticleInput handleSubmit={this.updateArticleURL} />
+                            <div className="divider"></div>
+                            <div className="card-panel blue lighten-2">Displaying Questions for <a href={this.state.articleURL}>article</a>.</div>
+                            <Questions articleURL={this.state.articleURL}/>
+                        </div>);
+            }
+        });
+        
+        var ArticleInput = React.createClass({
+
+            getInitialState: function() {
+                return {
+                    inputURL: "",
+                };
+            },
+            
+            handleSubmit: function(e) {
+                e.preventDefault();
+                this.props.handleSubmit(this.state.inputURL);
+                this.setState({inputURL: ''});
+            },
+            
+            handleInputChange: function(e) {
+                this.setState({inputURL: e.target.value});
+            },
+
+            render: function() {
+                return (
+                    <form onSubmit={this.handleSubmit}>
+                        <input type="text" id="article_url" onChange={this.handleInputChange} value={this.state.inputURL}></input>
+                        <label htmlFor="article_url">Article URL</label>
+                        <input type="submit" value="Submit" />
+                    </form>);
+            }
+        });
+        
         var Questions = React.createClass({
 
             getInitialState: function() {
                 return {
+                    loadingBar: "hide",
                     qdata: [], 
                 }
             },
-
-            componentDidMount: function() {
-                var articleURL = "http://www.nytimes.com/2016/03/31/health/abortion-pill-mifeprex-ru-486-fda.html";
-                $.ajax({
-                    url: this.props.url,
-                    data: {
-                        "url": articleURL,
-                        },
-                    dataType: 'json',
-                    cache: false,
-                    success: function(d) {
-                        this.setState({qdata: d});
-                    }.bind(this),
-                    error: function(xhr, status, err) {
-                        console.error(this.props.url, status, err.toString());
+            
+            componentWillReceiveProps: function() {
+                var baseURL = "https://blooming-crag-89757.herokuapp.com/gadfly/api/v1.0/questions";
+                this.setState({loadingBar: "show"},
+                    function() {
+                        $.ajax({
+                            url: baseURL,
+                            data: {
+                                "url": this.props.articleURL,
+                                },
+                            dataType: 'json',
+                            cache: false,
+                            success: function(d) {
+                                this.setState({qdata: d, loadingBar: "hide"});
+                            }.bind(this),
+                            error: function(xhr, status, err) {
+                                console.error(this.props.url, status, err.toString());
+                            }.bind(this)
+                        })
                     }.bind(this)
-                    });	
+                );
             },
 
             componentWillUnmount: function() {     
@@ -69,6 +128,11 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                <tr>
+                                    <div className={this.state.loadingBar + " progress"}>
+                                        <div className="indeterminate"></div>
+                                    </div>
+                                </tr>
                                 {questionList}
                             </tbody>
                         </table>);
@@ -89,7 +153,7 @@
             }
         });    
 
-        React.render(<Questions url="https://blooming-crag-89757.herokuapp.com/gadfly/api/v1.0/questions" />, document.getElementById('mount-point') );
+        React.render(<Page />, document.getElementById('mount-point') );
     </script>
 </body>
 </html>
