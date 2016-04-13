@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, make_response, render_template
+from flask import Flask, jsonify, make_response, render_template
 
 app = Flask(__name__)
 app.config['DEBUG'] = True
@@ -7,7 +7,7 @@ app.config['DEBUG'] = True
 # use this method to get questions
 @app.route('/', methods=['GET'])
 def index():
-   return render_template("index.html")
+    return render_template("index.html")
 
 
 @app.errorhandler(404)
