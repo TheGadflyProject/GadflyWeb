@@ -2,17 +2,9 @@
 var Page = React.createClass({
 
     getInitialState: function() {
-        var question_types = [{
-                name: "Multiple Choice",
-                url: "https://gadfly-api.herokuapp.com/api/multiple_choice_questions"
-            }, {
-                name: "Fill In The Blank",
-                url: "https://gadfly-api.herokuapp.com/api/gap_fill_questions"
-            }];
 
         return {
             articleURL: "",
-            question_types: question_types,
             baseURL: "",
         };
     },
@@ -30,64 +22,12 @@ var Page = React.createClass({
                     <div className="section">
                         <Article articleURL={this.state.articleURL} />
                     </div>
-                    <div className="section">
-                        <Dropdown list={this.state.question_types} selected={this.state.question_types[1]}/>
-                    </div>
                     <div className="divider"></div>
                     <div className="section">
                         <div className="card-panel blue lighten-2">Displaying Questions for <a href={this.state.articleURL}>article</a>.</div>
                         <Questions baseURL={this.state.baseURL} articleURL={this.state.articleURL} />
                     </div>
                 </div>);
-    }
-});
-
-var Dropdown = React.createClass({
-    getInitialState: function() {
-        return {
-        listVisible: false,
-        display: ""
-        };
-    },
-
-    select: function(item) {
-        this.props.selected = item;
-    },
-
-    show: function() {
-        this.setState({ listVisible: true });
-        document.addEventListener("click", this.hide);
-    },
-
-    hide: function() {
-        this.setState({ listVisible: false });
-        document.removeEventListener("click", this.hide);
-    },
-
-    render: function() {
-        return <div className={"dropdown-container" + (this.state.listVisible ? " show" : "")}>
-        <div className={"dropdown-display" + (this.state.listVisible ? " clicked": "")} onClick={this.show}>
-            <span>{this.props.selected.name}</span>
-            <i className="fa fa-angle-down"></i>
-        </div>
-        <div className="dropdown-list">
-            <div>
-            {this.renderListItems()}
-            </div>
-        </div>
-        </div>;
-    },
-
-    renderListItems: function() {
-        var items = [];
-        for (var i = 0; i < this.props.list.length; i++) {
-        var item = this.props.list[i];
-        items.push(<div onClick={this.select.bind(null, item)}>
-            <span>{item.name}</span>
-            <i className="fa fa-check"></i>
-        </div>);
-        }
-        return items;
     }
 });
 
