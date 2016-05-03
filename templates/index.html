@@ -1,229 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-	<title>The Gadfly Project</title>
-	<script src="https://code.jquery.com/jquery-2.2.2.min.js" integrity="sha256-36cp2Co+/62rEAAYHLmRCPIych47CvdM+uTBJwSzWjI=" crossorigin="anonymous"></script>
-    <!-- Compiled and minified CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/css/materialize.min.css">
-    <!-- Compiled and minified JavaScript -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/js/materialize.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.13.2/react.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.13.2/JSXTransformer.js"></script>
-</head>
-<body>
-    <nav>
-        <div class="nav-wrapper">
-        <a href="#" class="brand-logo">The Gadfly Project</a>
-        <ul id="nav-mobile" class="right hide-on-med-and-down">
-            <li><a href="http://ischool.berkeley.edu">About</a></li>
-        </ul>
-        </div>
-    </nav>
-    <div class="container">
-        <div class="row">
-            <div id="mount-point" class="col s12 m12 l12">
+    <head>
+        <meta charset="UTF-8">
+        <title>The Gadfly Project</title>
+        <script src="https://code.jquery.com/jquery-2.2.2.min.js" integrity="sha256-36cp2Co+/62rEAAYHLmRCPIych47CvdM+uTBJwSzWjI=" crossorigin="anonymous"></script>
+        <!-- Compiled and minified CSS -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/css/materialize.min.css">
+        <!-- Compiled and minified JavaScript -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/js/materialize.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.13.2/react.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.13.2/JSXTransformer.js"></script>
+    </head>
+    <body>
+        <nav>
+            <div class="nav-wrapper">
+                <a href="#" class="brand-logo">The Gadfly Project</a>
+                <ul id="nav-mobile" class="right hide-on-med-and-down">
+                    <li><a href="http://ischool.berkeley.edu">About</a></li>
+                </ul>
+            </div>
+        </nav>
+        <div class="container">
+            <div class="row">
+                <div id="mount-point" class="col s12 m12 l12">
+                </div>
             </div>
         </div>
-    </div>
-    <script type="text/javascript">
-      $(document).ready(function(){
-        $('.collapsible').collapsible({
-            accordion : false // A setting that changes the collapsible behavior to expandable instead of the default accordion style
-          });
-        });
-    </script>
-    <script type="text/jsx">
-        /*** @jsx React.DOM */
-        var Page = React.createClass({
-
-            getInitialState: function() {
-                return {
-                    articleURL: "",
-                };
-            },
-
-            updateArticleURL: function(newURL) {
-                this.setState({articleURL: newURL});
-            },
-
-            render: function() {
-                return (<div>
-                            <div className="section">
-                                <ArticleInput handleSubmit={this.updateArticleURL} />
-                            </div>
-                            <div className="divider"></div>
-                            <div className="section">
-                                <Article articleURL={this.state.articleURL} />
-                            </div>
-                            <div className="divider"></div>
-                            <div className="section">
-                                <div className="card-panel blue lighten-2">Displaying Questions for <a href={this.state.articleURL}>article</a>.</div>
-                                <Questions articleURL={this.state.articleURL} />
-                            </div>
-                        </div>);
-            }
-        });
-
-        var ArticleInput = React.createClass({
-
-            getInitialState: function() {
-                return {
-                    inputURL: "",
-                };
-            },
-
-            handleSubmit: function(e) {
-                e.preventDefault();
-                this.props.handleSubmit(this.state.inputURL);
-                this.setState({inputURL: ''});
-            },
-
-            handleInputChange: function(e) {
-                this.setState({inputURL: e.target.value});
-            },
-
-            render: function() {
-                return (
-                    <form onSubmit={this.handleSubmit}>
-                        <input type="text" id="article_url" onChange={this.handleInputChange} value={this.state.inputURL}></input>
-                        <label htmlFor="article_url">Article URL</label>
-                        <br />
-                        <input type="submit" value="Submit" className="btn" />
-                    </form>);
-            }
-        });
-
-        var Article = React.createClass({
-            getInitialState: function() {
-                return {
-                    articleText: "",
-                    showArticle: "hide",
-                }
-            },
-
-            toggleShowArticle: function() {
-                if(this.state.showArticle == "hide") {
-                    this.setState({showArticle: "show"});
-                } else {
-                    this.setState({showArticle: "hide"});
-                }
-            },
-
-            componentWillReceiveProps: function() {
-                var baseURL = "https://gadfly-api.herokuapp.com/gadfly/api/v1.0/article";
-                this.setState({showArticle: "hide"},
-                    function() {
-                        $.ajax({
-                            url: baseURL,
-                            data: {
-                                "url": this.props.articleURL,
-                                },
-                            dataType: 'text',
-                            cache: false,
-                            success: function(d) {
-                                this.setState({articleText: d, loadingBar: "hide"});
-                            }.bind(this),
-                            error: function(xhr, status, err) {
-                                console.error(this.props.url, status, err.toString());
-                            }.bind(this)
-                        })
-                    }.bind(this)
-                );
-            },
-
-            componentWillUnmount: function() {
-                this.serverRequest.abort();
-            },
-
-            render: function() {
-               return (
-                  <div>
-                    <a className="waves-effect waves-light btn" onClick={this.toggleShowArticle}>See Article</a>
-                    <div className={this.state.showArticle}>
-                      <a href={this.props.articleURL}>Go to Article</a>
-                      <p>{ this.state.articleText }</p>
-                    </div>
-                  </div>
-               );
-            }
-        });
-
-        var Questions = React.createClass({
-
-            getInitialState: function() {
-                return {
-                    loadingBar: "hide",
-                    qdata: [],
-                }
-            },
-
-            componentWillReceiveProps: function() {
-                var baseURL = "https://gadfly-api.herokuapp.com/gadfly/api/v1.0/gap_fill_questions";
-                this.setState({loadingBar: "show"},
-                    function() {
-                        $.ajax({
-                            url: baseURL,
-                            data: {
-                                "url": this.props.articleURL,
-                                },
-                            dataType: 'json',
-                            cache: false,
-                            success: function(d) {
-                                this.setState({qdata: d, loadingBar: "hide"});
-                            }.bind(this),
-                            error: function(xhr, status, err) {
-                                console.error(this.props.url, status, err.toString());
-                            }.bind(this)
-                        })
-                    }.bind(this)
-                );
-            },
-
-            componentWillUnmount: function() {
-                this.serverRequest.abort();
-            },
-
-            render: function() {
-                if (this.state.qdata.questions != undefined) {
-                    var questionList = this.state.qdata.questions.map(
-                            function(q) { return <Question question={q} />; }
-                        );
-                }
-                return (<table>
-                            <thead>
-                                <tr>
-                                    <th data-field="question">Question</th>
-                                    <th data-field="answer">Answer</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <div className={this.state.loadingBar + " progress"}>
-                                        <div className="indeterminate"></div>
-                                    </div>
-                                </tr>
-                                {questionList}
-                            </tbody>
-                        </table>);
-            }
-        });
-
-        var Question = React.createClass({
-
-            getInitialState: function() {
-                return {}
-            },
-
-            render: function() {
-                return (<tr>
-                            <td>{this.props.question.question_text}</td>
-                            <td>{this.props.question.correct_answer}</td>
-                        </tr>);
-            }
-        });
-
-        React.render(<Page />, document.getElementById('mount-point') );
-    </script>
-</body>
+        <script type="text/javascript">
+            $(document).ready(function(){
+                $('.collapsible').collapsible({
+                    accordion : false // A setting that changes the collapsible behavior to expandable instead of the default accordion style
+                });
+            });
+        </script>
+        <script type="text/jsx" src="{{ url_for('static', filename='js/page.js') }}"></script>
+    </body>
 </html>
