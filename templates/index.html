@@ -10,10 +10,11 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/js/materialize.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.13.2/react.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.13.2/JSXTransformer.js"></script>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
     </head>
     <body>
         <nav>
-            <div class="nav-wrapper">
+            <div class="nav-wrapper indigo lighten-1">
                 <a href="#" class="brand-logo">The Gadfly Project</a>
                 <ul id="nav-mobile" class="right hide-on-med-and-down">
                     <li><a href="http://ischool.berkeley.edu">About</a></li>
@@ -22,17 +23,28 @@
         </nav>
         <div class="container">
             <div class="row">
-                <div id="mount-point" class="col s12 m12 l12">
+                <div class="col s12 m4">
+                    <img id="socrates" src="{{ url_for('static', filename='images/socr8s.png') }}" alt="socrates"></img>
+                </div>
+                <div class="col s12 m8">
+                    <h1 class="valign">Welcome to The Gadfly Project.</h1>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s12">
+                    <div class="card-panel indigo lighten-3">
+                        <span class="white-text">Paste a link to an news article below to get started.</span>
+                    </div>
+                </div>
+                <div id="mount-point" class="col s12">
                 </div>
             </div>
         </div>
+        <script type="text/jsx" src="{{ url_for('static', filename='js/page.js') }}"></script>
         <script type="text/javascript">
             $(document).ready(function(){
-                $('.collapsible').collapsible({
-                    accordion : false // A setting that changes the collapsible behavior to expandable instead of the default accordion style
-                });
+
             });
         </script>
-        <script type="text/jsx" src="{{ url_for('static', filename='js/page.js') }}"></script>
     </body>
 </html>

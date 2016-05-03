@@ -12,20 +12,49 @@ var Page = React.createClass({
     updateArticleURL: function(newURL) {
         this.setState({articleURL: newURL});
     },
+    
+    componentDidMount: function() {
+        $('.collapsible').collapsible({
+            accordion : false // A setting that changes the collapsible behavior to expandable instead of the default accordion style
+        });
+        $('ul.tabs').tabs();  
+    },
 
     render: function() {
         return (<div>
                     <div className="section">
                         <ArticleInput handleSubmit={this.updateArticleURL} />
                     </div>
-                    <div className="divider"></div>
                     <div className="section">
-                        <Article articleURL={this.state.articleURL} />
-                    </div>
-                    <div className="divider"></div>
-                    <div className="section">
-                        <div className="card-panel blue lighten-2">Displaying Questions for <a href={this.state.articleURL}>article</a>.</div>
-                        <Questions baseURL={this.state.baseURL} articleURL={this.state.articleURL} />
+                        <ul className="tabs">
+                            <li className="tab col s2"><a href="#article">Article</a></li>
+                            <li className="tab col s2 disabled"><a href="#sent_segementation">Segmentation</a></li>
+                            <li className="tab col s2 disabled"><a href="#top_sents">Top Sentences</a></li>
+                            <li className="tab col s2 disabled"><a href="#entities">Entities</a></li>
+                            <li className="tab col s2"><a href="#mcq" className="active">Questions</a></li>
+                            <li className="tab col s2 disabled"><a href="#summary">Summary</a></li>
+                        </ul>
+                        <div>
+                            <br />
+                            <div id="article" className="col s12">
+                                <Article articleURL={this.state.articleURL} />
+                            </div>
+                            <div id="sent_segmentation" className="col s12">
+                                
+                            </div>
+                            <div id="top_sents" className="col s12">
+                                Top Sentences
+                            </div>
+                            <div id="entities" className="col s12">
+                                Entities
+                            </div>
+                            <div id="mcq" className="col s12">
+                                <Questions baseURL={this.state.baseURL} articleURL={this.state.articleURL} />
+                            </div>
+                            <div id="summary" className="col s12">
+                                Summary
+                            </div>
+                        </div>
                     </div>
                 </div>);
     }
@@ -55,7 +84,7 @@ var ArticleInput = React.createClass({
                 <input type="text" id="article_url" onChange={this.handleInputChange} value={this.state.inputURL}></input>
                 <label htmlFor="article_url">Article URL</label>
                 <br />
-                <input type="submit" value="Submit" className="btn" />
+                <input type="submit" value="Submit" className="btn indigo" />
             </form>);
     }
 });
@@ -64,21 +93,12 @@ var Article = React.createClass({
     getInitialState: function() {
         return {
             articleText: "",
-            showArticle: "hide",
-        }
-    },
-
-    toggleShowArticle: function() {
-        if(this.state.showArticle == "hide") {
-            this.setState({showArticle: "show"});
-        } else {
-            this.setState({showArticle: "hide"});
         }
     },
 
     componentWillReceiveProps: function() {
         var baseURL = "https://gadfly-api.herokuapp.com/api/article";
-        this.setState({showArticle: "hide"},
+        this.setState({loadingBar: "show"},
             function() {
                 $.ajax({
                     url: baseURL,
@@ -88,12 +108,13 @@ var Article = React.createClass({
                     dataType: 'text',
                     cache: false,
                     success: function(d) {
-                        this.setState({articleText: d, loadingBar: "hide"});
+                        console.log(d);
+                        this.setState({articleText: d});
                     }.bind(this),
                     error: function(xhr, status, err) {
                         console.error(this.props.url, status, err.toString());
                     }.bind(this)
-                })
+                });
             }.bind(this)
         );
     },
@@ -104,12 +125,11 @@ var Article = React.createClass({
 
     render: function() {
         return (
-            <div>
-            <a className="waves-effect waves-light btn" onClick={this.toggleShowArticle}>See Article</a>
-            <div className={this.state.showArticle}>
-                <a href={this.props.articleURL}>Go to Article</a>
-                <p>{ this.state.articleText }</p>
-            </div>
+            <div className="row">
+                <div className="col sm12">
+                    <a href={this.props.articleURL}>Go to Article</a>
+                    <p className="flow-text">{ this.state.articleText }</p>
+                </div>
             </div>
         );
     }
