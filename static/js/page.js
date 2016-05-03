@@ -28,7 +28,7 @@ var Page = React.createClass({
                     <div className="section">
                         <ul className="tabs">
                             <li className="tab col s2"><a href="#article">Article</a></li>
-                            <li className="tab col s2 disabled"><a href="#sent_segementation">Segmentation</a></li>
+                            <li className="tab col s2"><a href="#sent_segmentation">Segmentation</a></li>
                             <li className="tab col s2 disabled"><a href="#top_sents">Top Sentences</a></li>
                             <li className="tab col s2 disabled"><a href="#entities">Entities</a></li>
                             <li className="tab col s2"><a href="#mcq" className="active">Questions</a></li>
@@ -40,7 +40,7 @@ var Page = React.createClass({
                                 <Article articleURL={this.state.articleURL} />
                             </div>
                             <div id="sent_segmentation" className="col s12">
-                                
+                                <Sentences baseURL={this.state.baseURL} articleURL={this.state.articleURL} />
                             </div>
                             <div id="top_sents" className="col s12">
                                 Top Sentences
@@ -132,6 +132,56 @@ var Article = React.createClass({
                 </div>
             </div>
         );
+    }
+});
+
+var Sentences = React.createClass({
+
+    getInitialState: function() {
+        return {
+            loadingBar: "hide",
+            sentences: [],
+        }
+    },
+
+    componentWillReceiveProps: function() {
+        var baseURL = "https://gadfly-api.herokuapp.com/api/sentences";
+        this.setState({loadingBar: "show"},
+            function() {
+                $.ajax({
+                    url: baseURL,
+                    data: {
+                        "url": this.props.articleURL,
+                        },
+                    dataType: 'json',
+                    cache: false,
+                    success: function(d) {
+                        this.setState({sentences: d, loadingBar: "hide"});
+                    }.bind(this),
+                    error: function(xhr, status, err) {
+                        console.error(this.props.url, status, err.toString());
+                    }.bind(this)
+                })
+            }.bind(this)
+        );
+    },
+
+    componentWillUnmount: function() {
+        this.serverRequest.abort();
+    },
+
+    render: function() {
+        if (this.state.sentences != undefined) {
+            var sentenceList = this.state.sentences.map(
+                    function(s, i) { return <li key={i} className="collection-item">{s}</li>; }
+                );
+        }
+        return (
+            <div>
+                <ul className="collection">
+                    { sentenceList }
+                </ul>
+            </div>);
     }
 });
 
