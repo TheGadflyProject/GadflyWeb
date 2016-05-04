@@ -27,12 +27,10 @@ var Page = React.createClass({
                     </div>
                     <div className="section">
                         <ul className="tabs">
-                            <li className="tab col s2"><a href="#article">Article</a></li>
-                            <li className="tab col s2"><a href="#sent_segmentation">Segmentation</a></li>
-                            <li className="tab col s2"><a href="#top_sents">Top Sentences</a></li>
-                            <li className="tab col s2 disabled"><a href="#entities">Entities</a></li>
-                            <li className="tab col s2"><a href="#mcq" className="active">Questions</a></li>
-                            <li className="tab col s2 disabled"><a href="#summary">Summary</a></li>
+                            <li className="tab col s3"><a href="#article">Article</a></li>
+                            <li className="tab col s3"><a href="#sent_segmentation">Segmentation</a></li>
+                            <li className="tab col s3 disabled"><a href="#entities">Entities</a></li>
+                            <li className="tab col s3"><a href="#mcq" className="active">Questions</a></li>
                         </ul>
                         <div>
                             <br />
@@ -42,17 +40,11 @@ var Page = React.createClass({
                             <div id="sent_segmentation" className="col s12">
                                 <Sentences baseURL={this.state.baseURL} articleURL={this.state.articleURL} />
                             </div>
-                            <div id="top_sents" className="col s12">
-                                <TopSentences baseURL={this.state.baseURL} articleURL={this.state.articleURL} />
-                            </div>
                             <div id="entities" className="col s12">
                                 Entities
                             </div>
                             <div id="mcq" className="col s12">
                                 <Questions baseURL={this.state.baseURL} articleURL={this.state.articleURL} />
-                            </div>
-                            <div id="summary" className="col s12">
-                                Summary
                             </div>
                         </div>
                     </div>
@@ -172,57 +164,13 @@ var Sentences = React.createClass({
     render: function() {
         if (this.state.sentences.sents != undefined) {
             var sentenceList = this.state.sentences.sents.map(
-                    function(s, i) { return <li key={i} className="collection-item flow-text">{s}</li>; }
-                );
-        }
-        return (
-            <div>
-                <ul className="collection">
-                    { sentenceList }
-                </ul>
-            </div>);
-    }
-});
-
-var TopSentences = React.createClass({
-
-    getInitialState: function() {
-        return {
-            loadingBar: "hide",
-            sentences: [],
-        }
-    },
-
-    componentWillReceiveProps: function() {
-        var baseURL = "https://gadfly-api.herokuapp.com/api/top_sentences";
-        this.setState({loadingBar: "show"},
-            function() {
-                $.ajax({
-                    url: baseURL,
-                    data: {
-                        "url": this.props.articleURL,
-                        },
-                    dataType: 'json',
-                    cache: false,
-                    success: function(d) {
-                        this.setState({sentences: d, loadingBar: "hide"});
-                    }.bind(this),
-                    error: function(xhr, status, err) {
-                        console.error(this.props.url, status, err.toString());
+                    function(s, i) {
+                        console.log($.inArray(i, this.state.sentences.top_sent_idx));
+                        if ($.inArray(i, this.state.sentences.top_sent_idx) > -1) {
+                            return <li key={i} className="collection-item flow-text indigo darken-2 white-text">{s}</li>; 
+                        }
+                        return <li key={i} className="collection-item flow-text">{s}</li>;
                     }.bind(this)
-                })
-            }.bind(this)
-        );
-    },
-
-    componentWillUnmount: function() {
-        this.serverRequest.abort();
-    },
-
-    render: function() {
-        if (this.state.sentences.top_sents != undefined) {
-            var sentenceList = this.state.sentences.top_sents.map(
-                    function(s, i) { return <li key={i} className="collection-item flow-text">{s}</li>; }
                 );
         }
         return (
