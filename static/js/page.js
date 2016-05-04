@@ -85,6 +85,7 @@ var Article = React.createClass({
     getInitialState: function() {
         return {
             articleText: "",
+            loadingBar: "hide",
         }
     },
 
@@ -100,7 +101,7 @@ var Article = React.createClass({
                     dataType: 'text',
                     cache: false,
                     success: function(d) {
-                        this.setState({articleText: d});
+                        this.setState({articleText: d, loadingBar: "hide"});
                     }.bind(this),
                     error: function(xhr, status, err) {
                         console.error(this.props.url, status, err.toString());
@@ -117,6 +118,9 @@ var Article = React.createClass({
     render: function() {
         return (
             <div className="row">
+                <div className={this.state.loadingBar + " progress"}>
+                    <div className="indeterminate"></div>
+                </div>
                 <div className="col sm12">
                     <a href={this.props.articleURL}>Go to Article</a>
                     <p className="flow-text">{ this.state.articleText }</p>
@@ -175,6 +179,9 @@ var Sentences = React.createClass({
         }
         return (
             <div>
+                <div className={this.state.loadingBar + " progress"}>
+                    <div className="indeterminate"></div>
+                </div>
                 <ul className="collection">
                     { sentenceList }
                 </ul>
