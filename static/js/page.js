@@ -73,7 +73,7 @@ var ArticleInput = React.createClass({
     render: function() {
         return (
             <form onSubmit={this.handleSubmit}>
-                <input type="text" id="article_url" onChange={this.handleInputChange} value={this.state.inputURL}></input>
+                <input type="text" id="article_url" onChange={this.handleInputChange} value={this.state.inputURL} placeholder="Paste a link to a news article to get started"></input>
                 <label htmlFor="article_url">Article URL</label>
                 <br />
                 <input type="submit" value="Submit" className="btn indigo" />
