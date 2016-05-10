@@ -4,10 +4,14 @@ app = Flask(__name__)
 app.config['DEBUG'] = True
 
 
-# use this method to get questions
 @app.route('/', methods=['GET'])
 def index():
     return render_template("index.html")
+
+
+@app.route('/h8', methods=['GET'])
+def hate():
+    return render_template("hate.html")
 
 
 @app.errorhandler(404)
