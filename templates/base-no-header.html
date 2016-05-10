@@ -16,20 +16,7 @@
     <link rel="shortcut icon" type="image/png" href="{{ url_for('static', filename='images/socr8s_favicon.png') }}"/>
   </head>
   <body>
-  <div class="container">
-    <div class="row">
-      <div class="col s12 m4 center-align">
-          <img id="socrates" src="{{ url_for('static', filename='images/socr8s.png') }}" alt="socrates"></img>
-      </div>
-      <div class="col s12 m8 hide-on-small-only">
-          <h1 class="header">Welcome to the Gadfly Project.</h1>
-      </div>
-      <div class="col s12 center-align hide-on-med-and-up">
-          <h1 class="header">Welcome to the Gadfly Project.</h1>
-      </div>
-    </div>
-  </div>
-  {% block content %}{% endblock %}
+ {% block content %}{% endblock %}
   <footer class="page-footer indigo lighten-1">
     <div class="container">
       <div class="row">
