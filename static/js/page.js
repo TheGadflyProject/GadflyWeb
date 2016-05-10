@@ -363,6 +363,11 @@ var Question = React.createClass({
         }
     },
 
+    componentWillReceiveProps: function() {
+        this.setState({showAnswer: false, is_correct: "hide", is_not_correct: "hide"});
+    },
+
+
     render: function() {
         var answer_choices = this.props.question.answer_choices.map(
             (e, i) => <div key={e} id={e} className="chip" onClick={this.isRightAnswer} >{(i + 1) + ") " + e + " "}</div>
