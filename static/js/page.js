@@ -333,44 +333,54 @@ var Questions = React.createClass({
     render: function() {
         if (this.state.qdata.questions != undefined) {
             var questionList = this.state.qdata.questions.map(
-                    function(q) { return <Question question={q} />; }
+                    function(q) {
+                        return <Question question={q} />;
+                    }
                 );
         }
-        return (<table>
-                    <thead>
-                        <tr>
-                            <th data-field="question">Question</th>
-                            <th data-field="answer choices">Answer Choices</th>
-                            <th data-field="answer">Answer</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <div className={this.state.loadingBar + " progress"}>
-                                <div className="indeterminate"></div>
-                            </div>
-                        </tr>
+        return (<div>
+                    <div className={this.state.loadingBar + " progress"}>
+                        <div className="indeterminate"></div>
+                    </div>
+                    <div className="collection">
                         {questionList}
-                    </tbody>
-                </table>);
+                    </div>
+                </div>);
     }
 });
 
 var Question = React.createClass({
 
     getInitialState: function() {
-        return {}
+        return {showAnswer: false, is_correct: "hide", is_not_correct: "hide"}
+    },
+
+    isRightAnswer: function(e) {
+        if (e.target.id === this.props.question.answer) {
+          this.setState({showAnswer: true, is_correct: "show", is_not_correct: "hide"});
+        } else {
+          this.setState({showAnswer: true, is_correct: "hide", is_not_correct: "show"});
+        }
     },
 
     render: function() {
         var answer_choices = this.props.question.answer_choices.map(
-            (e, i) => (i + 1) + ") " + e + " "
+            (e, i) => <div key={e} id={e} className="chip" onClick={this.isRightAnswer} >{(i + 1) + ") " + e + " "}</div>
         );
-        return (<tr>
+        return (<div className="collection-item">
                     <td>{this.props.question.question}</td>
-                    <td>{answer_choices}</td>
-                    <td>{this.props.question.answer}</td>
-                </tr>);
+                    <div className="chips">{answer_choices}</div>
+                    <div className="row">
+                      <div className="col s2 m1">
+                        <i className={this.state.is_correct + " small material-icons green-text"}>thumb_up</i>
+                        <i className={this.state.is_not_correct + " small material-icons red-text"}>thumb_down</i>
+                      </div>
+
+                      <div className="col s10 m11">
+                        <div className={this.state.is_correct + " chip indigo lighten-2 white-text"}>{this.props.question.answer}</div>
+                      </div>
+                    </div>
+                </div>);
     }
 });
 
