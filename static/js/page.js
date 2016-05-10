@@ -12,7 +12,7 @@ var Page = React.createClass({
     updateArticleURL: function(newURL) {
         this.setState({articleURL: newURL});
     },
-    
+
     componentDidMount: function() {
         $('.collapsible').collapsible({
             accordion : false // A setting that changes the collapsible behavior to expandable instead of the default accordion style
@@ -29,7 +29,7 @@ var Page = React.createClass({
                         <ul className="tabs">
                             <li className="tab col s3"><a href="#article">Article</a></li>
                             <li className="tab col s3"><a href="#sent_segmentation">Segmentation</a></li>
-                            <li className="tab col s3 disabled"><a href="#entities">Entities</a></li>
+                            <li className="tab col s3"><a href="#entities">Entities</a></li>
                             <li className="tab col s3"><a href="#mcq" className="active">Questions</a></li>
                         </ul>
                         <div>
@@ -41,7 +41,7 @@ var Page = React.createClass({
                                 <Sentences baseURL={this.state.baseURL} articleURL={this.state.articleURL} />
                             </div>
                             <div id="entities" className="col s12">
-                                Entities
+                                <Entities baseURL={this.state.baseURL} articleURL={this.state.articleURL} />
                             </div>
                             <div id="mcq" className="col s12">
                                 <Questions baseURL={this.state.baseURL} articleURL={this.state.articleURL} />
@@ -184,6 +184,67 @@ var Sentences = React.createClass({
                 </div>
                 <ul className="collection">
                     { sentenceList }
+                </ul>
+            </div>);
+    }
+});
+
+var Entities = React.createClass({
+
+    getInitialState: function() {
+        return {
+            loadingBar: "hide",
+            entities: [],
+        }
+    },
+
+    componentWillReceiveProps: function() {
+        var baseURL = "https://gadfly-api.herokuapp.com/api/entities";
+        this.setState({loadingBar: "show"},
+            function() {
+                $.ajax({
+                    url: baseURL,
+                    data: {
+                        "url": this.props.articleURL,
+                        },
+                    dataType: 'json',
+                    cache: false,
+                    success: function(d) {
+                        this.setState({entities: d.entities, loadingBar: "hide"});
+                    }.bind(this),
+                    error: function(xhr, status, err) {
+                        console.error(this.props.url, status, err.toString());
+                    }.bind(this)
+                })
+            }.bind(this)
+        );
+    },
+
+    componentWillUnmount: function() {
+        this.serverRequest.abort();
+    },
+
+    render: function() {
+        if (this.state.entities != undefined) {
+            var entitiesList = [];
+            for (var ent in this.state.entities) {
+                var tags = this.state.entities[ent].map(function(e, i){
+                    return (<div key={i} className="chip">{e}</div>);
+                }.bind(this));
+                entitiesList.push(
+                  <li key={ent} className="collection-item indigo-text">
+                      {ent}
+                      <div>{ tags }</div>
+                  </li>)
+            }
+        }
+        return (
+            <div>
+                <div className={this.state.loadingBar + " progress"}>
+                    <div className="indeterminate"></div>
+                </div>
+                <ul className="collection">
+                    { entitiesList }
                 </ul>
             </div>);
     }
