@@ -26,6 +26,7 @@ var Page = React.createClass({
                         <ArticleInput handleSubmit={this.updateArticleURL} />
                     </div>
                     <div className="section">
+                        <ArticleTitle articleURL={this.state.articleURL} />
                         <ul className="tabs">
                             <li className="tab col s3"><a href="#article">Article</a></li>
                             <li className="tab col s3"><a href="#sent_segmentation">Segmentation</a></li>
@@ -80,6 +81,50 @@ var ArticleInput = React.createClass({
             </form>);
     }
 });
+
+var ArticleTitle = React.createClass({
+    getInitialState: function() {
+        return {
+            articleTitle: "",
+            loadingBar: "hide",
+        }
+    },
+
+    componentWillReceiveProps: function() {
+        var baseURL = "https://gadfly-api.herokuapp.com/api/article_info";
+        this.setState({loadingBar: "show"},
+            function() {
+                $.ajax({
+                    url: baseURL,
+                    data: {
+                        "url": this.props.articleURL,
+                        },
+                    dataType: 'json',
+                    cache: false,
+                    success: function(d) {
+                        console.log(d["article_info"]);
+                        this.setState({articleTitle: d["article_info"], loadingBar: "hide"});
+                    }.bind(this),
+                    error: function(xhr, status, err) {
+                        console.error(this.props.url, status, err.toString());
+                    }.bind(this)
+                });
+            }.bind(this)
+        );
+    },
+
+    componentWillUnmount: function() {
+        this.serverRequest.abort();
+    },
+
+    render: function() {
+        return (
+            <h2>{this.state.articleTitle}</h2>
+        );
+    }
+});
+
+
 
 var Article = React.createClass({
     getInitialState: function() {
