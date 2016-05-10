@@ -5,4 +5,10 @@
 
 .chip {
   margin: 3px;
+  cursor: pointer;
+  cursor: hand;
+}
+
+#h8 {
+  max-height: 500px;
 }

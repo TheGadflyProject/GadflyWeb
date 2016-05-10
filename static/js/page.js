@@ -17,7 +17,7 @@ var Page = React.createClass({
         $('.collapsible').collapsible({
             accordion : false // A setting that changes the collapsible behavior to expandable instead of the default accordion style
         });
-        $('ul.tabs').tabs();  
+        $('ul.tabs').tabs();
     },
 
     render: function() {
@@ -28,24 +28,24 @@ var Page = React.createClass({
                     <div className="section">
                         <ArticleTitle articleURL={this.state.articleURL} />
                         <ul className="tabs">
-                            <li className="tab col s3"><a href="#article">Article</a></li>
-                            <li className="tab col s3"><a href="#sent_segmentation">Segmentation</a></li>
-                            <li className="tab col s3"><a href="#entities">Entities</a></li>
                             <li className="tab col s3"><a href="#mcq" className="active">Questions</a></li>
+                            <li className="tab col s3"><a href="#entities">Entities</a></li>
+                            <li className="tab col s3"><a href="#sent_segmentation">Segmentation</a></li>
+                            <li className="tab col s3"><a href="#article">Article</a></li>
                         </ul>
                         <div>
                             <br />
-                            <div id="article" className="col s12">
-                                <Article articleURL={this.state.articleURL} />
-                            </div>
-                            <div id="sent_segmentation" className="col s12">
-                                <Sentences baseURL={this.state.baseURL} articleURL={this.state.articleURL} />
+                            <div id="mcq" className="col s12">
+                                <Questions baseURL={this.state.baseURL} articleURL={this.state.articleURL} />
                             </div>
                             <div id="entities" className="col s12">
                                 <Entities baseURL={this.state.baseURL} articleURL={this.state.articleURL} />
                             </div>
-                            <div id="mcq" className="col s12">
-                                <Questions baseURL={this.state.baseURL} articleURL={this.state.articleURL} />
+                            <div id="sent_segmentation" className="col s12">
+                                <Sentences baseURL={this.state.baseURL} articleURL={this.state.articleURL} />
+                            </div>
+                            <div id="article" className="col s12">
+                                <Article articleURL={this.state.articleURL} />
                             </div>
                         </div>
                     </div>
@@ -362,6 +362,11 @@ var Question = React.createClass({
           this.setState({showAnswer: true, is_correct: "hide", is_not_correct: "show"});
         }
     },
+
+    componentWillReceiveProps: function() {
+        this.setState({showAnswer: false, is_correct: "hide", is_not_correct: "hide"});
+    },
+
 
     render: function() {
         var answer_choices = this.props.question.answer_choices.map(

@@ -4,7 +4,6 @@ app = Flask(__name__)
 app.config['DEBUG'] = True
 
 
-# use this method to get questions
 @app.route('/', methods=['GET'])
 def index():
     return render_template("index.html")
@@ -12,7 +11,7 @@ def index():
 
 @app.errorhandler(404)
 def not_found(error):
-    return make_response(jsonify({'error': 'Not found'}), 404)
+    return render_template("hate.html")
 
 if __name__ == '__main__':
     app.run(debug=True, host="0.0.0.0", port=8081)
