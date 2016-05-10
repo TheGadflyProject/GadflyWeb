@@ -368,14 +368,15 @@ var Question = React.createClass({
             (e, i) => <div key={e} id={e} className="chip" onClick={this.isRightAnswer} >{(i + 1) + ") " + e + " "}</div>
         );
         return (<div className="collection-item">
-                    <td>{this.props.question.question}</td>
-                    <div className="chips">{answer_choices}</div>
+                    {this.props.question.question}
+                    <div className="row">
+                      <div className="chips">{answer_choices}</div>
+                    </div>
                     <div className="row">
                       <div className="col s2 m1">
                         <i className={this.state.is_correct + " small material-icons green-text"}>thumb_up</i>
                         <i className={this.state.is_not_correct + " small material-icons red-text"}>thumb_down</i>
                       </div>
-
                       <div className="col s10 m11">
                         <div className={this.state.is_correct + " chip indigo lighten-2 white-text"}>{this.props.question.answer}</div>
                       </div>
