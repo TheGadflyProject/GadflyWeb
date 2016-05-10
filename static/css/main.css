@@ -5,4 +5,6 @@
 
 .chip {
   margin: 3px;
+  cursor: pointer;
+  cursor: hand;
 }
