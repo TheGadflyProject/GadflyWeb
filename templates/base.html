@@ -2,14 +2,14 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>The Gadfly Project</title>
     <script src="https://code.jquery.com/jquery-2.2.2.min.js" integrity="sha256-36cp2Co+/62rEAAYHLmRCPIych47CvdM+uTBJwSzWjI=" crossorigin="anonymous"></script>
     <!-- Compiled and minified CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/css/materialize.min.css">
     <!-- Compiled and minified JavaScript -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/js/materialize.min.js"></script>
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"> 
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.13.2/react.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.13.2/JSXTransformer.js"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
@@ -23,10 +23,13 @@
       </div>
       <div class="col s12 m8 hide-on-small-only">
           <h1 class="header">Welcome to the Gadfly Project.</h1>
+          <p>Asking questions has inherent value. We want to increase and expand this value with an extensible automatic question generation service to allow interactions with texts that were previously unfeasible. Give our service a URL from any news article and we will automatically return a set related questions. We also show you some of the secret sauce that goes into generating these questions in the segmentation and entities sections. </p>
       </div>
       <div class="col s12 center-align hide-on-med-and-up">
           <h1 class="header">Welcome to the Gadfly Project.</h1>
+          <p>Asking questions has inherent value. We want to increase and expand this value with an extensible automatic question generation service to allow interactions with texts that were previously unfeasible. Give our service a URL from any news article and we will automatically return a set related questions. We also show you some of the secret sauce that goes into generating these questions in the segmentation and entities sections.</p>
       </div>
+
     </div>
   </div>
   {% block content %}{% endblock %}
